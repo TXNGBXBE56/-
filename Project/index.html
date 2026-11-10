@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="เว็บไซต์ประกอบการเรียนรู้รายวิชาระบบปฏิบัติการคอมพิวเตอร์ จัดทำโดยนักเรียน ปวช.3">
+<title>การเรียนรู้ระบบปฏิบัติการ | ระบบปฏิบัติการคอมพิวเตอร์</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:"Anuphan",sans-serif}
+:root{--sky:#4b9eea;--ice:#bde9ff;--cloud:#f4fbff;--ink:#183451}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{background:var(--cloud);color:#222;overflow-x:hidden}
+body.lock-scroll, body.loading-active{overflow:hidden}
+
+header{height:74px;background:rgba(255,255,255,.94);display:flex;align-items:center;padding:0 30px;position:fixed;top:0;left:0;right:0;z-index:1500;border-bottom:1px solid #e8e8ef;box-shadow:0 5px 25px rgba(40,35,90,.06);backdrop-filter:blur(18px);transition:.3s}
+.menu-btn{width:44px;height:44px;border:1px solid #d9eaf8;background:#fff;border-radius:12px;cursor:pointer;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:5px;transition:.25s}
+.menu-btn:hover{background:#e8f5ff;border-color:#78baff;transform:scale(1.04)}
+.menu-btn span{width:21px;height:2px;background:#4b9de7;border-radius:10px}
+.logo{margin-left:18px;font-size:24px;font-weight:800;color:#183451;white-space:nowrap;letter-spacing:-.5px}
+.logo span{color:#4a9eea}
+.search{margin-left:auto;width:280px;height:42px;padding:0 18px;background:#f4faff;border:1px solid #dbeaf6;border-radius:13px;color:#333;outline:none;font-size:14px;transition:.25s}
+.search:focus{background:#fff;border-color:#75baf2;box-shadow:0 0 0 4px rgba(116,160,232,.09)}
+
+.menu-backdrop{position:fixed;inset:0;z-index:2000;background:rgba(29,25,55,.25);backdrop-filter:blur(6px);opacity:0;visibility:hidden;transition:.3s}
+.menu-backdrop.show{opacity:1;visibility:visible}
+.side-menu{position:fixed;top:0;left:0;width:320px;max-width:88vw;height:100dvh;background:#fff;z-index:2500;padding:23px 16px;border-right:1px solid #dcecf8;box-shadow:12px 0 40px rgba(45,35,100,.13);transform:translateX(-110%);transition:transform .38s cubic-bezier(.77,0,.18,1);overflow-y:auto;visibility:hidden}
+.side-menu.open{transform:translateX(0);visibility:visible}
+.side-top{height:55px;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px}
+.side-title{color:#428ed5;font-size:21px;font-weight:750}
+.side-title:before{content:"✦";margin-right:8px;color:#89cbff}
+.close-menu{width:40px;height:40px;border:1px solid #d5e9fa;background:#eff8ff;border-radius:10px;color:#4b9de7;font-size:25px;cursor:pointer}
+.side-menu a{display:flex;align-items:center;gap:14px;min-height:54px;padding:12px 15px;margin:6px 0;border-radius:12px;color:#55566b;text-decoration:none;font-size:15px;font-weight:500;border:1px solid transparent;transition:.2s}
+.side-menu a:hover{background:#e7f5ff;color:#398edb;border-color:#c8e7ff;transform:translateX(3px)}
+.side-menu a.active{background:#e3f4ff;color:#3585cc;border-color:#cbe7ff}
+.menu-icon{width:30px;text-align:center;font-size:20px}
+
+main{transition:.3s}
+main.menu-open,header.menu-open,footer.menu-open{filter:blur(5px)}
+main.menu-open{pointer-events:none;user-select:none}
+
+.hero{min-height:780px;padding:125px 7% 80px;position:relative;overflow:hidden;background:radial-gradient(circle at 82% 18%,#cceaff 0,transparent 30%),radial-gradient(circle at 8% 80%,#d7f8ff 0,transparent 32%),linear-gradient(145deg,#f9fdff,#ecf8ff 70%,#f8faff);display:flex;align-items:center}
+.hero:before{content:'✦  +  ✧';position:absolute;top:120px;right:9%;font-size:27px;letter-spacing:20px;color:#7dc5f5;opacity:.75;pointer-events:none;animation:twinkle 4s ease-in-out infinite}
+.hero:after{content:'⌁  ✧  ⌁';position:absolute;bottom:55px;left:5%;font-size:22px;letter-spacing:13px;color:#80c7e9;opacity:.55;pointer-events:none}
+.hero-grid{width:100%;max-width:1400px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:70px;align-items:center}
+.hero-left{position:relative;z-index:5}
+.tag{display:inline-flex;align-items:center;gap:8px;padding:8px 16px;margin-bottom:22px;color:#287bbd;background:#e1f4ff;border:1px solid #bce5ff;border-radius:999px;font-size:14px;font-weight:650}
+.hero-left h1{color:#24223b;font-size:clamp(43px,5vw,70px);line-height:1.2;letter-spacing:-1px;font-weight:800;margin-bottom:24px}
+.hero-left h1 span{color:#479fe9}
+.teacher{color:#77778b;font-size:16px;margin-bottom:23px}
+.teacher strong{color:#3283c9}
+.hero-description{max-width:600px;color:#68687a;font-size:16px;line-height:1.9;margin-bottom:30px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;padding:14px 24px;border-radius:15px;text-decoration:none;font-weight:700;font-size:15px;transition:.25s}
+.btn-primary{color:white;background:linear-gradient(125deg,#4495e7,#67c4ef);box-shadow:0 12px 30px #5daee84d}
+.btn-primary:hover{transform:translateY(-3px);background:linear-gradient(125deg,#3185d4,#4cb2e4)}
+
+.hero-board{position:relative;width:100%;max-width:570px;height:490px;margin:auto}
+.board-main{position:absolute;width:430px;height:330px;right:20px;top:70px;background:white;border:1px solid #e2f2ff;border-radius:22px;box-shadow:0 28px 65px #4b9eea26,0 6px 20px #4b9eea14;transform:rotate(3deg);overflow:hidden;z-index:3}
+.board-top{height:50px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #e1f0fc}
+.board-dots{display:flex;gap:6px}
+.board-dots span{width:8px;height:8px;border-radius:50%;background:#cfe7f7}
+.board-label{color:#8b8999;font-size:11px}
+.board-content{padding:25px}
+.board-title{color:#234664;font-size:27px;font-weight:800;margin-bottom:8px}
+.board-sub{color:#9997a6;font-size:12px;margin-bottom:22px}
+.fake-layout{display:grid;grid-template-columns:1.2fr .8fr;gap:12px}
+.fake-large{height:145px;border-radius:14px;background:linear-gradient(145deg,#4a9be8,#87d6f9);position:relative;overflow:hidden}
+.fake-large:before{content:"OS";position:absolute;left:20px;bottom:15px;color:white;font-size:36px;font-weight:900}
+.fake-large:after{content:"LEARNING";position:absolute;left:22px;top:18px;color:#ffffffb8;font-size:9px;letter-spacing:3px}
+.fake-small{display:grid;gap:12px}
+.fake-box{border-radius:13px;background:#e5f5ff;position:relative;overflow:hidden}
+.fake-box:first-child{background:#e2f6ff}
+.fake-box:after{content:"";position:absolute;width:45px;height:45px;right:-8px;bottom:-12px;background:#ffffff77;border-radius:50%}
+
+.float-card{position:absolute;background:#fff;border-radius:17px;box-shadow:0 18px 40px #3689cb24;border:1px solid #dcefff;z-index:8}
+.float-chapter{width:175px;padding:18px;left:0;top:105px;transform:rotate(-6deg);animation:float 4s ease-in-out infinite}
+.float-chapter small{color:#9a98a8;font-size:10px}
+.float-chapter h3{color:#234664;font-size:19px;margin-top:4px}
+.float-icon{width:40px;height:40px;display:flex;align-items:center;justify-content:center;background:#e1f3ff;border-radius:11px;margin-bottom:12px;font-size:20px}
+.float-score{width:155px;padding:17px;right:0;bottom:55px;transform:rotate(5deg);animation:float 4.7s ease-in-out infinite reverse}
+.score-top{display:flex;justify-content:space-between;align-items:center}
+.score-top span{color:#9997a8;font-size:11px}
+.score-number{color:#438ed8;font-size:29px;font-weight:850}
+.mini-progress{height:6px;background:#e1f0fc;border-radius:20px;overflow:hidden;margin-top:8px}
+.mini-progress div{width:72%;height:100%;background:#7bbff1;border-radius:20px}
+.float-folder{width:95px;height:95px;display:flex;align-items:center;justify-content:center;left:35px;bottom:35px;background:#fff2d9;font-size:40px;transform:rotate(7deg);animation:float 5s ease-in-out infinite}
+
+.shape{position:absolute;pointer-events:none}
+.shape-circle{width:80px;height:80px;border-radius:50%;background:#d5edff;right:25px;top:10px}
+.shape-square{width:48px;height:48px;background:#bceeff;left:90px;top:20px;border-radius:10px;transform:rotate(18deg)}
+.shape-line{width:100px;height:12px;border-radius:20px;background:#ffdc96;right:70px;bottom:15px;transform:rotate(-15deg)}
+
+.section{padding:90px 7%;background:#fff}
+.section-title{max-width:1250px;margin:0 auto 42px}
+.section-title .eyebrow{color:#4b9eea;font-size:13px;font-weight:750;letter-spacing:1px;margin-bottom:8px}
+.section-title h2{color:#234664;font-size:38px;font-weight:800;margin-bottom:8px}
+.section-title p{color:#8b8999;font-size:15px}
+
+.cards{max-width:1250px;margin:auto;display:grid;grid-template-columns:repeat(5,1fr);gap:18px}
+.card{min-height:250px;background:#fff;border:1px solid #dcecf8;border-radius:18px;padding:20px;position:relative;overflow:hidden;transition:.3s;box-shadow:0 8px 25px #5a9fd010;cursor:pointer;text-decoration:none;display:block}
+.card:hover{transform:translateY(-7px);box-shadow:0 18px 42px #4d9cdd2c;border-color:#a9d9fa}
+.icon{width:55px;height:55px;display:flex;align-items:center;justify-content:center;border-radius:15px;background:#e4f5ff;font-size:25px;margin-bottom:17px}
+.card:nth-child(2n) .icon{background:#e1f6ff}
+.card:nth-child(3n) .icon{background:#e4f9f6}
+.card:nth-child(5n) .icon{background:#fff0f6}
+.card h3{color:#234664;font-size:17px;font-weight:700;line-height:1.6;margin-bottom:9px}
+.card p{color:#858393;line-height:1.8;font-size:13px}
+.card-link-text{display:inline-block;margin-top:18px;color:#398dd3;font-size:13px;font-weight:750}
+.card:hover .card-link-text{color:#2676c3}
+
+.info{background:#eef8ff;border-block:1px solid #e0edf7}
+.info-box{max-width:1250px;margin:auto;display:grid;grid-template-columns:repeat(4,1fr);gap:18px}
+.info-item{min-height:155px;padding:25px;background:#fff;border-radius:18px;border:1px solid #deedf8;position:relative;overflow:hidden}
+.info-item:after{content:"";position:absolute;width:80px;height:80px;right:-30px;bottom:-30px;border-radius:50%;background:#d9efff}
+.info-item:nth-child(2):after{background:#ddf7ff}
+.info-item:nth-child(3):after{background:#fff3d9}
+.info-item:nth-child(4):after{background:#dcf8f2}
+.info-item h3{position:relative;z-index:2;color:#438ed8;font-size:38px;font-weight:850}
+.info-item p{position:relative;z-index:2;color:#777586;margin-top:4px;font-size:14px}
+
+.project-details{background:#f9fcff;padding:70px 7%;border-top:1px solid #e1edf7}
+.project-container{max-width:1250px;margin:auto;display:grid;grid-template-columns:1fr 1fr;gap:35px}
+.project-box{background:#fff;border:1px solid #dcecf8;border-radius:20px;padding:30px;box-shadow:0 10px 30px rgba(75,158,234,.08)}
+.project-box h3{color:#234664;font-size:22px;font-weight:750;margin-bottom:15px;display:flex;align-items:center;gap:10px}
+.project-box p{color:#68687a;font-size:14px;line-height:1.9;margin-bottom:12px}
+.project-list{list-style:none;margin-top:15px}
+.project-list li{display:flex;align-items:flex-start;gap:10px;margin-bottom:10px;color:#55566b;font-size:14px;line-height:1.7}
+.project-list li span{color:#4b9eea;font-weight:bold}
+
+footer{padding:45px 20px;background:#183650;color:#fff;text-align:center}
+footer h3{color:#fff;font-size:24px;font-weight:800}
+footer p{color:#c1d1df;margin-top:8px;font-size:13px;line-height:1.8}
+
+.loading-screen{position:fixed;inset:0;z-index:5000;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(247,250,255,.94);backdrop-filter:blur(15px);opacity:0;visibility:hidden;transition:.3s}
+.loading-screen.show{opacity:1;visibility:visible}
+.loading-card{width:min(390px,100%);padding:35px 28px;background:#fff;border:1px solid #e4e2ef;border-radius:23px;text-align:center;box-shadow:0 25px 80px rgba(45,35,100,.16);transform:translateY(12px) scale(.98);transition:.3s}
+.loading-screen.show .loading-card{transform:translateY(0) scale(1)}
+.loading-logo{font-size:27px;font-weight:800;color:#1a3856;margin-bottom:24px}
+.loading-logo span{color:#4a9eea}
+.spinner{width:56px;height:56px;margin:0 auto 22px;border:5px solid #ebe9f7;border-top-color:#4b9eea;border-right-color:#b0dfff;border-radius:50%;animation:spin .8s linear infinite}
+.loading-card h2{font-size:21px;color:#244463;margin-bottom:8px}
+.loading-card p{font-size:14px;color:#888697;line-height:1.8}
+.progress-track{height:7px;background:#e1f0fc;border-radius:20px;margin-top:23px;overflow:hidden}
+.progress-bar{height:100%;width:0;background:linear-gradient(90deg,#4b9eea,#a3dcff);border-radius:20px;transition:width .15s linear}
+.progress-percent{display:block;margin-top:9px;text-align:right;color:#398dd3;font-size:12px;font-weight:700}
+body.loading-active header,body.loading-active main,body.loading-active footer,body.loading-active .side-menu{filter:blur(5px);pointer-events:none}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+@keyframes twinkle{0%,100%{opacity:.45;transform:translateY(0)}50%{opacity:1;transform:translateY(-7px)}}
+
+@media(max-width:1150px){
+  .hero-grid{grid-template-columns:1fr;gap:35px}
+  .hero-left{text-align:center}
+  .hero-description{margin-left:auto;margin-right:auto}
+  .hero-board{transform:scale(.9);margin-top:-25px}
+  .cards{grid-template-columns:repeat(3,1fr)}
+  .project-container{grid-template-columns:1fr}
+}
+@media(max-width:800px){
+  header{padding:0 18px}
+  .search{width:210px}
+  .hero{padding:120px 25px 60px}
+  .hero-left h1{font-size:45px}
+  .hero-board{transform:scale(.75);transform-origin:center top;height:390px;margin-bottom:-70px}
+  .cards{grid-template-columns:repeat(2,1fr)}
+  .info-box{grid-template-columns:repeat(2,1fr)}
+  .section{padding:70px 25px}
+}
+@media(max-width:550px){
+  .logo{font-size:20px;margin-left:11px}
+  .search{display:none}
+  .hero{min-height:auto;padding:110px 20px 45px}
+  .hero-left h1{font-size:38px;letter-spacing:-.5px}
+  .hero-description{font-size:14px}
+  .hero-board{transform:scale(.58);height:310px;margin-top:-60px;margin-bottom:-120px}
+  .section{padding:60px 18px}
+  .section-title h2{font-size:30px}
+  .cards{grid-template-columns:1fr}
+  .info-box{grid-template-columns:1fr 1fr;gap:10px}
+  .info-item{padding:20px 15px}
+  .info-item h3{font-size:31px}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{scroll-behavior:auto!important;animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}
+}
+</style>
+</head>
+<body>
+
+<div class="menu-backdrop" id="menuBackdrop" onclick="closeMenu()" aria-hidden="true"></div>
+
+<aside class="side-menu" id="sideMenu" aria-label="เมนูการเรียนรู้" aria-hidden="true">
+    <div class="side-top">
+        <div class="side-title">เมนูการเรียนรู้</div>
+        <button class="close-menu" onclick="closeMenu()" title="ปิดเมนู" aria-label="ปิดเมนู">×</button>
+    </div>
+    <a href="#home" class="active" onclick="navigateWithLoading(event,this,'หน้าหลัก')"><span class="menu-icon">🏠</span><span>หน้าหลัก</span></a>
+    <a href="#lesson" onclick="navigateWithLoading(event,this,'บทเรียน')"><span class="menu-icon">📚</span><span>บทเรียน</span></a>
+    <a href="#lesson" onclick="navigateWithLoading(event,this,'เอกสารประกอบการเรียน')"><span class="menu-icon">📖</span><span>เอกสารประกอบการเรียน</span></a>
+    <a href="แบบฝึกหัด.html" onclick="navigateWithLoading(event,this,'แบบฝึกหัด')"><span class="menu-icon">🎯</span><span>แบบฝึกหัด</span></a>
+    <a href="#about" onclick="navigateWithLoading(event,this,'เกี่ยวกับเว็บไซต์')"><span class="menu-icon">👨‍💻</span><span>เกี่ยวกับเว็บไซต์</span></a>
+</aside>
+
+<header id="siteHeader">
+    <button class="menu-btn" id="menuButton" onclick="openMenu()" title="เปิดเมนู" aria-label="เปิดเมนู" aria-expanded="false">
+        <span></span><span></span><span></span>
+    </button>
+    <div class="logo">OS <span>Learning</span></div>
+    <input class="search" id="lessonSearch" type="search" placeholder="ค้นหาบทเรียน..." aria-label="ค้นหาบทเรียน">
+</header>
+
+<main id="mainContent">
+    <section class="hero" id="home">
+        <div class="hero-grid">
+            <div class="hero-left">
+                <div class="tag">🖥️ Computer Operating System</div>
+                <h1>ระบบปฏิบัติการ <br> <span>คอมพิวเตอร์</span></h1>
+                <div class="teacher">ครูผู้สอน <strong>ครูกุสุมา ปิ่นสุภา</strong></div>
+                <p class="hero-description">เว็บไซต์ประกอบการเรียนการสอนรายวิชา ระบบปฏิบัติการคอมพิวเตอร์ เรียนรู้ตั้งแต่พื้นฐาน ส่วนประกอบ การทำงาน และการจัดการระบบคอมพิวเตอร์ พร้อมเกมสนุกๆ ท้ายบทเรียน</p>
+                <a href="#lesson" class="btn btn-primary" onclick="navigateWithLoading(event,this,'บทเรียน')">📚 ดูบทเรียน</a>
+            </div>
+            <div class="hero-board">
+                <div class="shape shape-circle"></div>
+                <div class="shape shape-square"></div>
+                <div class="shape shape-line"></div>
+                <div class="board-main">
+                    <div class="board-top">
+                        <div class="board-dots"><span></span><span></span><span></span></div>
+                        <div class="board-label">OS Learning</div>
+                    </div>
+                    <div class="board-content">
+                        <div class="board-title">ระบบปฏิบัติการ</div>
+                        <div class="board-sub">Computer Operating System</div>
+                        <div class="fake-layout">
+                            <div class="fake-large"></div>
+                            <div class="fake-small">
+                                <div class="fake-box"></div>
+                                <div class="fake-box"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="float-card float-chapter">
+                    <div class="float-icon">📚</div>
+                    <small>LEARNING</small>
+                    <h3>10 บทเรียน</h3>
+                </div>
+                <div class="float-card float-score">
+                    <div class="score-top"><span>ความคืบหน้า</span><span>100%</span></div>
+                    <div class="score-number">OS</div>
+                    <div class="mini-progress"><div></div></div>
+                </div>
+                <div class="float-card float-folder">📁</div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="lesson">
+        <div class="section-title">
+            <div class="eyebrow">OS LEARNING</div>
+            <h2>บทเรียนของเรา</h2>
+            <p>เลือกหัวข้อที่ต้องการเรียนรู้ (ทุกบทเรียนมีเกมท้ายบทเพื่อทดสอบความเข้าใจ)</p>
+        </div>
+        <div class="cards" id="lessonCards">
+            <!-- บทที่ 1: แก้ไขคำอธิบาย -->
+            <a href="Lesson 1.html" class="card" onclick="openLesson(event,this)">
+                <div class="icon">💻</div>
+                <h3>บทที่ 1 ระบบปฏิบัติการคอมพิวเตอร์</h3>
+                <p>ศึกษาความหมาย ความสำคัญ หน้าที่หลัก และวิวัฒนาการของระบบปฏิบัติการคอมพิวเตอร์</p>
+                <span class="card-link-text">ดูบทเรียน →</span>
+            </a>
+            <!-- บทที่ 2: แก้ไขคำอธิบาย -->
+            <a href="Lesson 2.html" class="card" onclick="openLesson(event,this)">
+                <div class="icon">⚙️</div>
+                <h3>บทที่ 2 โปรแกรมระบบปฏิบัติการคอมพิวเตอร์</h3>
+                <p>เรียนรู้เกี่ยวกับประเภท โครงสร้าง และสถาปัตยกรรมของโปรแกรมระบบปฏิบัติการ</p>
+                <span class="card-link-text">ดูบทเรียน →</span>
+            </a>
+            <!-- บทที่ 3: แก้ไขคำอธิบาย -->
+            <a href="Lesson 3.html" class="card" onclick="openLesson(event,this)">
+                <div class="icon">🖥️</div>
+                <h3>บทที่ 3 การเลือกใช้และติดตั้งระบบปฏิบัติการ</h3>
+                <p>แนวทางการคัดเลือกสเปคคอมพิวเตอร์ และขั้นตอนการติดตั้งระบบปฏิบัติการให้เหมาะสมกับการใช้งาน</p>
+                <span class="card-link-text">ดูบทเรียน →</span>
+            </a>
+            <a href="Lesson 4.html" class="card" onclick="openLesson(event,this)">
+                <div class="icon">🔐</div>
+                <h3>บทที่ 4 การเลือกใช้และการติดตั้งระบบปฏิบัติการมาตรฐานปิดและมาตรฐานเปิด</h3>
+                <p>ความปลอดภัยของระบบปฏิบัติการ และการป้องกันข้อมูล</p>
+                <span class="card-link-text">ดูบทเรียน →</span>
+            </a>
+            <a href="Lesson 5.html" class="card" onclick="openLesson(event,this)">
+                <div class="icon">🪟</div>
+                <h3>บทที่ 5 การติดตั้งไดรเวอร์</h3>
+                <p>ทำความรู้จักระบบปฏิบัติการ Windows และการใช้งานพื้นฐาน</p>
+                <span class="card-link-text">ดูบทเรียน →</span>
+            </a>
+            <!-- บทที่ 6: แก้ไขคำอธิบาย -->
+            <a href="Lesson 6.html" class="card" onclick="openLesson(event,this)">
+                <div class="icon">🐧</div>
+                <h3>บทที่ 6 การใช้งานโปรแกรมระบบปฏิบัติการ Windows 10 เบื้องต้น</h3>
+                <p>การใช้งานเมนูหลัก การจัดการหน้าจอเดสก์ท็อป และเครื่องมือพื้นฐานบน Windows 10</p>
+                <span class="card-link-text">ดูบทเรียน →</span>
+            </a>
+            <a href="Lesson 7.html" class="card" onclick="openLesson(event,this)">
+                <div class="icon">📂</div>
+                <h3>บทที่ 7 การใช้งานโปรแกรมระบบปฏิบัติการ Windows 11 เบื้องต้น</h3>
+                <p>การจัดการไฟล์และโฟลเดอร์ การจัดเก็บข้อมูล และระบบไฟล์</p>
+                <span class="card-link-text">ดูบทเรียน →</span>
+            </a>
+            <a href="Lesson 8.html" class="card" onclick="openLesson(event,this)">
+                <div class="icon">🧠</div>
+                <h3>บทที่ 8 การใช้งานโปรแกรมระบบปฏิบัติการ Ubuntu เบื้องต้น</h3>
+                <p>การจัดการหน่วยความจำ และการทำงานร่วมกันของโปรแกรม</p>
+                <span class="card-link-text">ดูบทเรียน →</span>
+            </a>
+            <a href="Lesson 9.html" class="card" onclick="openLesson(event,this)">
+                <div class="icon">🛡️</div>
+                <h3>บทที่ 9 การใช้งานโปรแกรมยูทิลิตี้</h3>
+                <p>การดูแลรักษาระบบ การแก้ไขปัญหา และความปลอดภัยของคอมพิวเตอร์</p>
+                <span class="card-link-text">ดูบทเรียน →</span>
+            </a>
+            <!-- บทที่ 10: แก้ไขคำอธิบาย -->
+            <a href="Lesson 10.html" class="card" onclick="openLesson(event,this)">
+                <div class="icon">🚀</div>
+                <h3>บทที่ 10 ไวรัสคอมพิวเตอร์ การสำรอง และการกู้คืนข้อมูล</h3>
+                <p>เรียนรู้ภัยคุกคามจากไวรัส การป้องกันด้วยโปรแกรมสแกน วิธีสำรองข้อมูล (Backup) และการกู้คืนระบบ (Restore)</p>
+                <span class="card-link-text">ดูบทเรียน →</span>
+            </a>
+        </div>
+    </section>
+
+    <section class="section info">
+        <div class="section-title">
+            <div class="eyebrow">ABOUT LEARNING</div>
+            <h2>เว็บไซต์นี้มีอะไรบ้าง?</h2>
+            <p>เครื่องมือช่วยให้การเรียนรู้สนุกและเข้าใจง่ายขึ้น</p>
+        </div>
+        <div class="info-box">
+            <div class="info-item"><h3>10</h3><p>บทเรียน</p></div>
+            <div class="info-item"><h3>10</h3><p>เกมท้ายบท (บทละ 1 เกม)</p></div>
+            <div class="info-item"><h3>10</h3><p>แบบฝึกหัดทบทวน</p></div>
+            <div class="info-item"><h3>∞</h3><p>เรียนรู้ได้ทุกเวลา</p></div>
+        </div>
+    </section>
+
+    <section class="project-details" id="about-project">
+        <div class="section-title">
+            <div class="eyebrow">PROJECT INFORMATION</div>
+            <h2>รายละเอียดการพัฒนาเว็บไซต์</h2>
+            <p>ข้อมูลความเป็นมาและรูปแบบการจัดทำโครงงาน</p>
+        </div>
+        <div class="project-container">
+            <div class="project-box">
+                <h3>🎮 ระบบเกมการศึกษา (Gamification)</h3>
+                <p>เพื่อเพิ่มความสนุกสนานและลดความน่าเบื่อในการเรียนออนไลน์ เว็บไซต์ของเราจึงได้ออกแบบและพัฒนากิจกรรมเสริมการเรียนรู้ ดังนี้:</p>
+                <ul class="project-list">
+                    <li><span>เกมท้ายบทเรียน:</span> มีมินิเกมหรือแบบทดสอบเชิงเกมมิฟิเคชันจำนวน <strong>1 เกมต่อ 1 บทเรียน</strong> รวมทั้งหมด 10 บท</li>
+                    <li><span>วัตถุประสงค์:</span> เพื่อให้ผู้เรียนได้ทบทวนความเข้าใจ วัดผลตนเอง และเสริมสร้างแรงจูงใจในการศึกษาเนื้อหารายวิชาระบบปฏิบัติการคอมพิวเตอร์</li>
+                </ul>
+            </div>
+            <div class="project-box">
+                <h3>📅 ข้อมูลการจัดทำและเผยแพร่</h3>
+                <p>เว็บไซต์นี้เป็นส่วนหนึ่งของโครงงานระดับประกาศนียบัตรวิชาชีพ (ปวช.3) แผนกเทคโนโลยีธุรกิจดิจิทัล รายละเอียดสำคัญมีดังนี้:</p>
+                <ul class="project-list">
+                    <li><span>ระยะเวลาพัฒนา:</span> พัฒนาขึ้นในช่วงปีการศึกษา 2569</li>
+                    <li><span>วันที่เผยแพร่ระบบ:</span> เปิดให้บริการและเผยแพร่ออนไลน์อย่างเป็นทางการในวันที่ 24 มกราคม 2570</li>
+                    <li><span>เทคโนโลยีที่ใช้:</span> พัฒนาด้วยภาษา HTML, CSS และ JavaScript พร้อมระบบหน้าจอโหลดดิ้งและเอฟเฟกต์ตอบสนองที่ทันสมัย</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer id="about">
+    <h3>OS Learning</h3>
+    <p>เว็บไซต์ประกอบการเรียนการสอนรายวิชาระบบปฏิบัติการคอมพิวเตอร์</p>
+    <p>ครูผู้สอน : ครูกุสุมา ปิ่นสุภา</p>
+    <p>จัดทำโดย นักเรียนแผนกเทคโนโลยีธุรกิจดิจิทัล ระดับ ปวช.3</p>
+</footer>
+
+<div class="loading-screen" id="loadingScreen" role="status" aria-live="polite" aria-hidden="true">
+    <div class="loading-card">
+        <div class="loading-logo">OS <span>Learning</span></div>
+        <div class="spinner"></div>
+        <h2 id="loadingTitle">กำลังเปิดบทเรียน</h2>
+        <p id="loadingMessage">กรุณารอสักครู่ ระบบกำลังเตรียมเนื้อหาให้คุณ</p>
+        <div class="progress-track"><div class="progress-bar" id="progressBar"></div></div>
+        <span class="progress-percent" id="progressPercent">0%</span>
+    </div>
+</div>
+
+<script>
+const sideMenu = document.getElementById("sideMenu");
+const mainContent = document.getElementById("mainContent");
+const siteHeader = document.getElementById("siteHeader");
+const siteFooter = document.querySelector("footer");
+const menuBackdrop = document.getElementById("menuBackdrop");
+const menuButton = document.getElementById("menuButton");
+
+let loadingTimer = null, progressTimer = null, isNavigating = false;
+
+function openMenu(){
+    if(isNavigating) return;
+    sideMenu.classList.add("open");
+    menuBackdrop.classList.add("show");
+    mainContent.classList.add("menu-open");
+    siteHeader.classList.add("menu-open");
+    siteFooter.classList.add("menu-open");
+    document.body.classList.add("lock-scroll");
+    sideMenu.setAttribute("aria-hidden","false");
+    menuButton.setAttribute("aria-expanded","true");
+}
+
+function closeMenu(){
+    sideMenu.classList.remove("open");
+    menuBackdrop.classList.remove("show");
+    mainContent.classList.remove("menu-open");
+    siteHeader.classList.remove("menu-open");
+    siteFooter.classList.remove("menu-open");
+    document.body.classList.remove("lock-scroll");
+    sideMenu.setAttribute("aria-hidden","true");
+    menuButton.setAttribute("aria-expanded","false");
+}
+
+function showLoading(title,message){
+    if(isNavigating) return;
+    isNavigating = true;
+    closeMenu();
+
+    const screen = document.getElementById("loadingScreen");
+    document.getElementById("loadingTitle").textContent = title || "กำลังโหลดหน้าเว็บ";
+    document.getElementById("loadingMessage").textContent = message || "กรุณารอสักครู่";
+    
+    const bar = document.getElementById("progressBar");
+    const percent = document.getElementById("progressPercent");
+    bar.style.width = "0%";
+    percent.textContent = "0%";
+
+    document.body.classList.add("loading-active");
+    screen.classList.add("show");
+    screen.setAttribute("aria-hidden","false");
+
+    let value = 0;
+    clearInterval(progressTimer);
+    progressTimer = setInterval(() => {
+        if(value < 90){
+            value += value < 50 ? 5 : 2;
+            value = Math.min(value, 90);
+            bar.style.width = value + "%";
+            percent.textContent = value + "%";
+        }
+    }, 55);
+}
+
+function openLesson(event, link){
+    const destination = link.getAttribute("href");
+    if(!destination || destination === "#") return;
+    if(isNavigating){ event.preventDefault(); return; }
+    event.preventDefault();
+
+    const card = link.closest(".card");
+    const chapter = card ? card.querySelector("h3").textContent : "บทเรียน";
+
+    showLoading("กำลังเปิดบทเรียน", "กำลังเตรียมเนื้อหา " + chapter);
+    loadingTimer = setTimeout(() => {
+        clearInterval(progressTimer);
+        document.getElementById("progressBar").style.width = "100%";
+        document.getElementById("progressPercent").textContent = "100%";
+        setTimeout(() => { window.location.href = destination; }, 300);
+    }, 1200);
+}
+
+function navigateWithLoading(event, link, pageName){
+    const destination = link.getAttribute("href");
+    if(!destination || destination === "#") return;
+    if(isNavigating){ event.preventDefault(); return; }
+    
+    if(destination.startsWith("#")){
+        closeMenu();
+        return;
+    }
+
+    event.preventDefault();
+    showLoading("กำลังเปิดหน้าเว็บ", "กำลังโหลดหน้า " + pageName);
+    loadingTimer = setTimeout(() => {
+        clearInterval(progressTimer);
+        document.getElementById("progressBar").style.width = "100%";
+        document.getElementById("progressPercent").textContent = "100%";
+        setTimeout(() => { window.location.href = destination; }, 300);
+    }, 1000);
+}
+</script>
+</body>
+</html>
